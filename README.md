@@ -14,7 +14,6 @@ A simple program that connects to a RoboMaster TT Drone and displays a logo on t
 ## Install
 Download the files to a directory on your computer. The quickest way to do this is using git. Then you must pip install the DJI `djitellopy` module that allows you to easily interface with the RoboMaster TT Drone without having to worry about UDP packets. The DJI module handles this all for you under the hood.
 
-To see the specific compile steps, view the Makefile using a command like `cat Makefile`. The most basic compiling command would something like this:
 ```
 % git clone https://github.com/prof-tallman/HelloRoboMaster
 Cloning into 'HelloRoboMaster'...
