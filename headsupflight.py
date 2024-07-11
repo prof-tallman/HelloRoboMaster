@@ -14,7 +14,7 @@ class HeadsUpTello():
 
     def __init__(self, drone_object, debug_level=logging.INFO):
         """
-        Constuctor that establishes a connection with the drone. Pass in a new
+        Constructor that establishes a connection with the drone. Pass in a
         djitellopy Tello object to give your HeadsUpTello object its wings.
 
         Arguments
