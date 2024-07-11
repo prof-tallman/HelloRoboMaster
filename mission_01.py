@@ -42,26 +42,28 @@ def mission_01():
     my_robomaster = Tello()
     drone = HeadsUpTello(my_robomaster, logging.WARNING)
 
-    # Turn the top LED bright green and show our logo on the matrix display
-    drone.matrix_pattern(huf_logo1, 'b')
+    # Turn the top LED bright green
     r = 0
     g = 200
     b = 50
     drone.top_led_color(r, g, b)
 
+    # Show our logo on the matrix display
+    drone.matrix_pattern(huf_logo1, 'b')
+
     # Slowly dim the top LED without changing the LED matrix
-    # The loop runs 100 times with a 0.05 second delay => 5 seconds
+    # The loop runs 10 times with a 0.5 second delay => 5 seconds
     # These colors don't exactly match up to true RGB colors
     for i in range(10): 
         g -= 20
         b -= 5
         drone.top_led_color(r, g, b)
-        time.sleep(1)
+        time.sleep(0.5)
 
     # Turn off the LED matrix and make the top LED red for two seconds  
+    drone.matrix_off()
     drone.top_led_color(200, 10, 10)
     time.sleep(2)
-    drone.matrix_off()
     drone.top_led_off()
 
     # Finish the mission

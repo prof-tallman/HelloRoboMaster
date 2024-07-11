@@ -9,27 +9,27 @@ import logging
 class HeadsUpTello():
     """
     An interface from Team "Heads-Up Flight" to control a DJI Tello RoboMaster 
-    Drone. Inherits from the djitellopy.Tello class.
+    Drone. Uses djitellopy.Tello class as the base object.
     """
 
-    def __init__(self, drone_baseobject, debug_level=logging.INFO):
+    def __init__(self, drone_object, debug_level=logging.INFO):
         """
         Constuctor that establishes a connection with the drone. Pass in a new
-        djitellopy Tello object give your HeadsUpTello object its wings.
+        djitellopy Tello object to give your HeadsUpTello object its wings.
 
         Arguments
-            drone_baseobject: A new djitellopy.Tello() object
-            debug_level:      Set the desired logging level.
-                              logging.INFO shows every command and response 
-                              logging.WARN will only show problems
-                              There are other possibilities, see logging module
+            drone_object: A new djitellopy.Tello() object
+            debug_level:  Set the desired logging level.
+                          logging.INFO shows every command and response 
+                          logging.WARN will only show problems
+                          There are other possibilities, see logging module
         """
 
         # HeadsUpTello class uses the design principal of composition (has-a)
         # instead of inheritance (is-a) so that we can choose between the real
         # drone and a simulator. If we had used inheritance, we would be forced
         # to choose one or the other.
-        self.drone = drone_baseobject
+        self.drone = drone_object
         self.drone.LOGGER.setLevel(debug_level)
 
         try:
@@ -38,10 +38,11 @@ class HeadsUpTello():
         except Exception as excp:
             print(f"ERROR: could not connect to Trello Drone: {excp}")
             print(f" => Did you pass in a valid drone base object?")
-            print(f" => Verify that your firewall allows UDP ports 8889 and 8890")
+            print(f" => Verify that your firewall allows UDP ports 8889 and 8890.")
             print(f"    The Chromebook's firewall reverts to default settings every")
             print(f"    time that you restart the virtual Linux environment.")
             print(f" => You may need to connect to the drone with the Trello App.")
+            self.connected = False
             self.disconnect()
             raise
         return
@@ -84,8 +85,7 @@ class HeadsUpTello():
     def top_led_off(self):
         """ Turn off the top LED. """
 
-        cmd = f"EXT led 0 0 0"
-        self.drone.send_control_command(cmd)
+        self.top_led_color(0, 0, 0)
         return
 
 
@@ -94,7 +94,8 @@ class HeadsUpTello():
         Show the flattened pattern on the LED matrix. The pattern should be 
         64 letters in a row with values either (r)ed, (b)lue, (p)urple, or (0)
         off. The first 8 characters are the top row, the next 8 are the second
-        row, and so on.
+        row, and so on. If only one color is desired, the '*' and '0' chars
+        can be used as a binary coding system.  
         
         Arguments
             flattened_pattern: see examples in dji_matrix.py
@@ -122,7 +123,10 @@ class HeadsUpTello():
 
 
     def get_barometer(self):
-        """ Returns the drone's current barometer reading in cm. """
+        """
+        Returns the drone's current barometer reading in cm from the  ground.
+        The accuracy of this reading fluctates with the weather. 
+        """
         return self.drone.get_barometer()
 
 
